@@ -1,0 +1,32 @@
+<h1><%= @city.name %>, <%= @city.country %></h1>
+
+<% if @city.forecasts.any? %>
+  <h2>Recent Forecasts</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>Temperature (°C)</th>
+        <th>Humidity (%)</th>
+        <th>Wind Speed (km/h)</th>
+        <th>Weather</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @city.forecasts.order(fetched_at: :desc).limit(10).each do |forecast| %>
+        <tr>
+          <td><%= forecast.time_updated.strftime("%b %d, %Y %I:%M %p") %></td>
+          <td><%= forecast.temperature %></td>
+          <td><%= forecast.humidity %></td>
+          <td><%= forecast.windspeed %></td>
+          <td><%= weather_description(forecast.weather_code) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p>No weather data available for this city yet.</p>
+<% end %>
+
+<%= link_to "Delete", city_path(@city), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
+<%= link_to "Back to Cities", cities_path %>

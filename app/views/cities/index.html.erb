@@ -1,0 +1,26 @@
+<h1>Saved Cities</h1>
+
+<div class="row row-cols-1 row-cols-md-2 g-3">
+  <% @cities.each do |city| %>
+    <div class="col">
+      <div class="card h-100">
+        <div class="card-body">
+          <% forecast = city.forecasts.last %>
+            <% if forecast %>
+              <img src="<%= forecast["is_day"] == 1 ? 'https://openweathermap.org/img/wn/01d@2x.png' : 'https://openweathermap.org/img/wn/01n@2x.png' %>" 
+              alt="Weather Icon" style="width:50px;height:50px;">
+            <% end %>
+          <h5 class="card-title"><%= city.name %>, <%= city.country %></h5>
+          <p class="card-text">
+            Local Time: <%= Time.current.in_time_zone(city.timezone).strftime("%b %d, %Y %I:%M %p") %>
+          </p>
+          <p class="card-text">Population: <%= number_with_delimiter(city.population) %></p>
+          <%= link_to "View Weather", city_path(city), class: "btn btn-primary" %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+
+<%= link_to "Search for a new city", weather_search_path %>

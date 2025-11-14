@@ -1,0 +1,7 @@
+<h1>Weather Search</h1>
+
+<%= form_with url: weather_result_path, method: :get, local: true do %>
+  <%= label_tag :city, "Enter city name:" %>
+  <%= text_field_tag :city %>
+  <%= submit_tag "Search" %>
+<% end %>
