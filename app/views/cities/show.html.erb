@@ -1,32 +1,100 @@
-<h1><%= @city.name %>, <%= @city.country %></h1>
+<div class="container py-4">
 
-<% if @city.forecasts.any? %>
-  <h2>Recent Forecasts</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Time</th>
-        <th>Temperature (°C)</th>
-        <th>Humidity (%)</th>
-        <th>Wind Speed (km/h)</th>
-        <th>Weather</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @city.forecasts.order(fetched_at: :desc).limit(10).each do |forecast| %>
-        <tr>
-          <td><%= forecast.time_updated.strftime("%b %d, %Y %I:%M %p") %></td>
-          <td><%= forecast.temperature %></td>
-          <td><%= forecast.humidity %></td>
-          <td><%= forecast.windspeed %></td>
-          <td><%= weather_description(forecast.weather_code) %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% else %>
-  <p>No weather data available for this city yet.</p>
-<% end %>
+  <% if @city.forecasts.any? %>
+    <% latest = @city.forecasts.last %>
 
-<%= link_to "Delete", city_path(@city), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" } %>
-<%= link_to "Back to Cities", cities_path %>
+    <div class="card border-0 shadow-sm mb-5 rounded-4">
+      <div class="card-body p-4 d-flex flex-column flex-md-row align-items-center justify-content-between">
+
+        <div class="text-center text-md-start me-md-5 mb-3 mb-md-0" style="min-width: 180px;">
+          <h3 class="fw-bold mb-2" style="font-size: 1.5rem;"><%= @city.name %>, <%= @city.country %></h3>
+          <% if @city.population.present? %>
+            <p class="text-muted mb-1" style="font-size: 1.05rem;">
+              <strong>City Population:</strong> <%= number_with_delimiter(@city.population) %>
+            </p>
+          <% end %>
+          <p class="text-muted mb-0" style="font-size: 1rem;">
+            <strong>Weather as of:</strong> <%= latest.time_updated.strftime("%b %d, %Y %I:%M %p") %>
+          </p>
+        </div>
+
+        <div class="d-flex flex-column align-items-center justify-content-center mx-md-5 mb-3 mb-md-0" style="min-width: 160px;">
+          <% if latest['is_day'] == 1 %>
+            <span class="badge px-4 py-2 rounded-pill shadow-sm mb-3"
+                  style="background-color: white; color: black; border: 1px solid #ddd; font-size: 1.15rem;">
+              ☀️ Day
+            </span>
+          <% else %>
+            <span class="badge px-4 py-2 rounded-pill shadow-sm mb-3"
+                  style="background-color: #1b263b; color: white; font-size: 1.15rem;">
+              🌙 Night
+            </span>
+          <% end %>
+          <h2 class="fw-bold mb-0 align-items-center" style="font-size: 1.3rem;"><%= weather_description(latest.weather_code) %></h2>
+        </div>
+
+        <div class="d-flex flex-column align-items-center align-items-md-start ms-md-5">
+          <p class="mb-1" style="font-size: 1.1rem;">
+            <strong>Temperature:</strong> <%= latest.temperature %>°C
+          </p>
+          <p class="mb-1" style="font-size: 1.1rem;">
+            <strong>Humidity:</strong> <%= latest.humidity %>%
+          </p>
+          <p class="mb-0" style="font-size: 1.1rem;">
+            <strong>Wind Speed:</strong> <%= latest.windspeed %> km/h
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <h4 class="fw-semibold mb-3 text-left">Recent Forecasts</h4>
+
+    <div class="table-responsive shadow-sm mb-4">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th class="text-center">Time</th>
+            <th class="text-center">Temp</th>
+            <th class="text-center">Humidity</th>
+            <th class="text-center">Wind</th>
+            <th class="text-center">Condition</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @forecasts.each do |forecast| %>
+            <tr class="align-middle">
+              <td class="text-center" style="white-space: nowrap;">
+                <span class="d-none d-md-inline"><%= forecast.time_updated.strftime("%b %d, %Y %I:%M %p") %></span>
+                <span class="d-inline d-md-none"><%= forecast.time_updated.strftime("%b %d, %H:%M") %></span>
+              </td>
+              <td class="text-center fs-7 fs-md-6"><%= forecast.temperature %>°C</td>
+              <td class="text-center fs-7 fs-md-6"><%= forecast.humidity %>%</td>
+              <td class="text-center fs-7 fs-md-6"><%= forecast.windspeed %> km/h</td>
+              <td class="text-center fs-7 fs-md-6"><%= weather_description(forecast.weather_code) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="d-flex justify-content-center mt-4">
+      <%= paginate @forecasts %>
+    </div>
+
+  <% else %>
+    <div class="alert alert-info text-center">
+      No weather data available for this city yet.
+    </div>
+  <% end %>
+
+  <div class="d-flex justify-content-center gap-3 flex-wrap mt-4">
+    <%= link_to "Back to Cities", cities_path, class: "btn btn-outline-secondary rounded-pill px-4 py-2" %>
+
+    <%= link_to "Delete City",
+        city_path(@city),
+        class: "btn btn-danger rounded-pill px-4 py-2",
+        data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this city?" } %>
+  </div>
+
+</div>

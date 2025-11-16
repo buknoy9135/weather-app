@@ -57,3 +57,9 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
+
+gem "whenever", "~> 1.0"
+
+gem "kaminari", "~> 1.2"
+
+gem "bootstrap5-kaminari-views"

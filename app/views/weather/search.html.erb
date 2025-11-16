@@ -1,7 +1,39 @@
-<h1>Weather Search</h1>
+<div class="container py-5">
 
-<%= form_with url: weather_result_path, method: :get, local: true do %>
-  <%= label_tag :city, "Enter city name:" %>
-  <%= text_field_tag :city %>
-  <%= submit_tag "Search" %>
-<% end %>
+  <!-- Hero Section -->
+  <div class="text-center mb-5">
+    <h1 class="fw-bold display-5">Weather Finder</h1>
+    <p class="text-muted fs-5">
+      Search accurate weather updates by entering the city name below.
+    </p>
+  </div>
+
+  <!-- Form Panel -->
+  <div class="row justify-content-center">
+    <div class="col-lg-5 col-md-7">
+
+      <div class="p-4 shadow-sm rounded-4 bg-white">
+        <%= form_with url: weather_result_path, method: :get, local: true do %>
+
+          <div class="mb-4">
+            <%= label_tag :city, "City Name", class: "form-label fw-semibold" %>
+            <%= text_field_tag :city, params[:city], 
+              class: "form-control form-control-lg", 
+              placeholder: "e.g. Cebu, Manila, Tokyo" 
+            %>
+          </div>
+
+          <div class="d-grid mb-2">
+            <%= submit_tag "Search Weather", class: "btn btn-primary btn-lg" %>
+          </div>
+
+        <% end %>
+
+        <div class="text-center mt-3">
+          <%= link_to "Back to Cities", cities_path, class: "text-decoration-none text-muted" %>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

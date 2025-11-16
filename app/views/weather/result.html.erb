@@ -1,35 +1,41 @@
-<h1>Search Results</h1>
+<h3 class="fw-bold mb-4">Search Results</h3>
 
 <% if @results.present? && @results.is_a?(Array) && @results.any? %>
-  <ul>
+  <div class="list-group">
     <% @results.each do |result| %>
-      <li style="margin-bottom: 1rem;">
-        <strong><%= result["name"] %></strong>,
-        <%= result["country"] %>
-        <% if result["admin1"] %>
-          (<%= result["admin1"] %>)
-        <% end %>
+      <div class="list-group-item py-3 mb-2 shadow-sm border-0 rounded-3">
+        <h5 class="fw-semibold mb-1">
+          <%= result["name"] %>, <%= result["country"] %>
+          <% if result["admin1"] %>
+            <small class="text-muted">(<%= result["admin1"] %>)</small>
+          <% end %>
+        </h5>
 
-        <br>
-        Lat: <%= result["latitude"] %>,
-        Lon: <%= result["longitude"] %>
+        <p class="text-secondary small mb-2">
+          Lat: <%= result["latitude"] %> | Lon: <%= result["longitude"] %>
+        </p>
 
-        <%= form_with url: cities_path, method: :post, local: true, style: "display:inline;" do %>
+        <%= form_with url: cities_path, method: :post, local: true, class: "mt-2" do %>
           <%= hidden_field_tag "city[name]", result["name"] %>
           <%= hidden_field_tag "city[country]", result["country"] %>
           <%= hidden_field_tag "city[latitude]", result["latitude"] %>
           <%= hidden_field_tag "city[longitude]", result["longitude"] %>
           <%= hidden_field_tag "city[timezone]", result["timezone"] %>
           <%= hidden_field_tag "city[population]", result["population"] %>
-          <%= submit_tag "Save this city", class: "btn" %>
+
+          <%= submit_tag "Save this city", class: "btn btn-primary btn-sm rounded-pill mt-2" %>
         <% end %>
-      </li>
+      </div>
     <% end %>
-  </ul>
+  </div>
+
 <% elsif @results.is_a?(Hash) && @results["error"] %>
-  <p>Error: <%= @results["error"] %></p>
+  <p class="text-danger">Error: <%= @results["error"] %></p>
+
 <% else %>
-  <p>No results found.</p>
+  <p class="text-muted">No results found.</p>
 <% end %>
 
-<%= link_to "Back", root_path %>
+<div class="mt-4">
+  <%= link_to "Back", root_path, class: "btn btn-outline-secondary rounded-pill px-4" %>
+</div>

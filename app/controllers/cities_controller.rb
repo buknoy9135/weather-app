@@ -30,8 +30,7 @@ class CitiesController < ApplicationController
 
   def show
     @city = City.find(params[:id])
-    @forecasts = @city.forecasts.order(fetched_at: :desc).limit(10)
-    # @forecast = @city.forecasts.last
+    @forecasts = @city.forecasts.order(fetched_at: :desc).page(params[:page]).per(10)
   end
 
   def destroy
