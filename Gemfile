@@ -58,7 +58,7 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem "whenever", "~> 1.0"
+gem "whenever", "~> 1.1"
 
 gem "kaminari", "~> 1.2"
 
